@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import TodoInfo from "./TodoInfo";
 import TodoList from "./TodoList";
+import Button from "./Button";
+
 const Todo = () => {
   const [tasks, SetTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -14,10 +16,13 @@ const Todo = () => {
       { id: "task-2", title: "погладить кота", isDone: true },
     ];
   });
-
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  const newTaskInputRef = useRef(null);
+  const firstInCompleteTaskRef = useRef(null);
+  const firstInCompleteTaskId = tasks.find(({ isDone }) => !isDone)?.id;
 
   const deleteAllTasks = () => {
     const isConfirmed = confirm("Are you sure you want to delete all?");
@@ -51,13 +56,18 @@ const Todo = () => {
       };
       SetTasks([...tasks, newTask]);
       setNewTaskTitle("");
-      setSearchQuery("")
+      setSearchQuery("");
+      newTaskInputRef.current.focus();
     }
   };
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    newTaskInputRef.current.focus();
+  }, []); // поле ввода сразу получает возможность ввода
 
   const clearSearchQuery = searchQuery.trim("").toLowerCase();
   const filteredTasks =
@@ -73,6 +83,7 @@ const Todo = () => {
         addTasks={addTasks}
         newTaskTitle={newTaskTitle}
         setNewTaskTitle={setNewTaskTitle}
+        newTaskInputRef={newTaskInputRef}
       />
       <SearchTaskForm
         searchQuery={searchQuery}
@@ -83,9 +94,18 @@ const Todo = () => {
         done={tasks.filter(({ isDone }) => isDone).length}
         onDeleteAllButtonClick={deleteAllTasks}
       />
+      <Button
+        onClick={() =>
+          firstInCompleteTaskRef.current?.scrollIntoView({ behavior: "smooth" })
+        }
+      >
+        Show first in complete task
+      </Button>
       <TodoList
         tasks={tasks}
         filteredTasks={filteredTasks}
+        firstInCompleteTaskRef={firstInCompleteTaskRef}
+        firstInCompleteTaskId={firstInCompleteTaskId}
         onDeleteTaskButtonClick={deleteTask}
         onTaskCompleteChange={toggleTaskComplete}
       />

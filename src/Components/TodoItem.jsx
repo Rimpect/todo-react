@@ -1,15 +1,23 @@
 import React from "react";
 
 const TodoItem = (props) => {
-  const { className = "", id, title, isDone, onDeleteTaskButtonClick,onTaskCompleteChange } = props;
+  const {
+    className = "",
+    id,
+    title,
+    isDone,
+    onDeleteTaskButtonClick,
+    onTaskCompleteChange,
+    ref,
+  } = props;
   return (
-    <li className={`todo-item ${className}`}>
+    <li className={`todo-item ${className}`} ref={ref}>
       <input
         className="todo-item__checkbox"
         id={id}
         type="checkbox"
         checked={isDone}
-        onChange={({target})=>onTaskCompleteChange(id, target.checked)}
+        onChange={({ target }) => onTaskCompleteChange(id, target.checked)}
       />
       <label className="todo-item__label" htmlFor={id}>
         {title}
