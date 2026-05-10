@@ -5,6 +5,7 @@ const Field = (props) => {
     label,
     type = "text",
     onInput,
+    error,
     value,
     ref,
   } = props;
@@ -14,7 +15,7 @@ const Field = (props) => {
         {label}
       </label>
       <input
-        className="field__input"
+        className={`field__input ${error ? "is-invalid" : ""}`}
         id={id}
         placeholder=" "
         autoComplete="off"
@@ -23,6 +24,7 @@ const Field = (props) => {
         onInput={onInput}
         ref={ref}
       />
+      {error && <span className="field__error" title={error}>{error}</span>}
     </div>
   );
 };
