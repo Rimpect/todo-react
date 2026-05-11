@@ -1,11 +1,12 @@
-import { createContext } from 'react'
-import useTasks from '../hooks/useTasks'
-import useIncompleteTaskScroll from '../hooks/useIncompleteTaskScroll'
+import { createContext } from "react";
+import useTasks from "../hooks/useTasks";
+import useIncompleteTaskScroll from "../hooks/useIncompleteTaskScroll";
 
-export const TasksContext = createContext({})
+// eslint-disable-next-line react-refresh/only-export-components
+export const TasksContext = createContext({});
 
 export const TasksProvider = (props) => {
-  const { children } = props
+  const { children } = props;
 
   const {
     tasks,
@@ -19,12 +20,12 @@ export const TasksProvider = (props) => {
     setSearchQuery,
     newTaskInputRef,
     addTask,
-  } = useTasks()
+    disappearingTaskId,
+    appearingTaskId,
+  } = useTasks();
 
-  const {
-    firstIncompleteTaskRef,
-    firstIncompleteTaskId,
-  } = useIncompleteTaskScroll(tasks)
+  const { firstIncompleteTaskRef, firstIncompleteTaskId } =
+    useIncompleteTaskScroll(tasks);
 
   return (
     <TasksContext.Provider
@@ -42,9 +43,11 @@ export const TasksProvider = (props) => {
         setSearchQuery,
         newTaskInputRef,
         addTask,
+        disappearingTaskId,
+        appearingTaskId,
       }}
     >
       {children}
     </TasksContext.Provider>
-  )
-}
+  );
+};

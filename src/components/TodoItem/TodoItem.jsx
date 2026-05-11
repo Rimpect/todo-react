@@ -1,26 +1,23 @@
-import { memo, useContext } from 'react'
-import { TasksContext } from '../../context/TasksContext'
-import RouterLink from '../RouterLink/RouterLink'
-import styles from './TodoItem.module.scss'
+import { memo, useContext } from "react";
+import { TasksContext } from "../../context/TasksContext";
+import RouterLink from "../RouterLink/RouterLink";
+import styles from "./TodoItem.module.scss";
 
 const TodoItem = (props) => {
-  const {
-    className = '',
-    id,
-    title,
-    isDone,
-  } = props
+  const { className = "", id, title, isDone } = props;
 
   const {
     firstIncompleteTaskRef,
     firstIncompleteTaskId,
     deleteTask,
     toggleTaskComplete,
-  } = useContext(TasksContext)
+    disappearingTaskId,
+    appearingTaskId,
+  } = useContext(TasksContext);
 
   return (
     <li
-      className={`${styles.todoItem} ${className}`}
+      className={`${styles.todoItem} ${className}${disappearingTaskId === id ? styles.isDisappearing : ""}${appearingTaskId === id ? styles.isAppearing : ""}`}
       ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
     >
       <input
@@ -29,13 +26,10 @@ const TodoItem = (props) => {
         type="checkbox"
         checked={isDone}
         onChange={({ target }) => {
-          toggleTaskComplete(id, target.checked)
+          toggleTaskComplete(id, target.checked);
         }}
       />
-      <label
-        className={`${styles.label} visually-hidden`}
-        htmlFor={id}
-      >
+      <label className={`${styles.label} visually-hidden`} htmlFor={id}>
         {title}
       </label>
       <RouterLink to={`/tasks/${id}`} aria-label="Task detail page">
@@ -64,7 +58,7 @@ const TodoItem = (props) => {
         </svg>
       </button>
     </li>
-  )
-}
+  );
+};
 
-export default memo(TodoItem)
+export default memo(TodoItem);
