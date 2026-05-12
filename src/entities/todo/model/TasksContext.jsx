@@ -1,11 +1,12 @@
-import { createContext } from 'react'
-import useTasks from './useTasks'
-import useIncompleteTaskScroll from './useIncompleteTaskScroll'
+import { createContext, useMemo } from "react";
+import useTasks from "./useTasks";
+import useIncompleteTaskScroll from "./useIncompleteTaskScroll";
 
-export const TasksContext = createContext({})
+// eslint-disable-next-line react-refresh/only-export-components
+export const TasksContext = createContext({});
 
 export const TasksProvider = (props) => {
-  const { children } = props
+  const { children } = props;
 
   const {
     tasks,
@@ -21,34 +22,47 @@ export const TasksProvider = (props) => {
     addTask,
     disappearingTaskId,
     appearingTaskId,
-  } = useTasks()
+  } = useTasks();
 
-  const {
-    firstIncompleteTaskRef,
-    firstIncompleteTaskId,
-  } = useIncompleteTaskScroll(tasks)
-
+  const { firstIncompleteTaskRef, firstIncompleteTaskId } =
+    useIncompleteTaskScroll(tasks);
+  const value = useMemo(
+    () => ({
+      tasks,
+      filteredTasks,
+      deleteTask,
+      deleteAllTasks,
+      toggleTaskComplete,
+      newTaskTitle,
+      setNewTaskTitle,
+      searchQuery,
+      setSearchQuery,
+      newTaskInputRef,
+      addTask,
+      disappearingTaskId,
+      appearingTaskId,
+      firstIncompleteTaskRef,
+      firstIncompleteTaskId,
+    }),
+    [
+      tasks,
+      filteredTasks,
+      deleteTask,
+      deleteAllTasks,
+      toggleTaskComplete,
+      newTaskTitle,
+      setNewTaskTitle,
+      searchQuery,
+      setSearchQuery,
+      newTaskInputRef,
+      addTask,
+      disappearingTaskId,
+      appearingTaskId,
+      firstIncompleteTaskRef,
+      firstIncompleteTaskId,
+    ],
+  );
   return (
-    <TasksContext.Provider
-      value={{
-        tasks,
-        filteredTasks,
-        firstIncompleteTaskRef,
-        firstIncompleteTaskId,
-        deleteTask,
-        deleteAllTasks,
-        toggleTaskComplete,
-        newTaskTitle,
-        setNewTaskTitle,
-        searchQuery,
-        setSearchQuery,
-        newTaskInputRef,
-        addTask,
-        disappearingTaskId,
-        appearingTaskId,
-      }}
-    >
-      {children}
-    </TasksContext.Provider>
-  )
-}
+    <TasksContext.Provider value={value}>{children}</TasksContext.Provider>
+  );
+};
