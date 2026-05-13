@@ -8,4 +8,5 @@ const TasksPage = () => {
     </TasksProvider>
   )
 }
+
 export default TasksPage
